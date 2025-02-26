@@ -6,7 +6,7 @@ require "./panel"
 #Shrimp: A CLI framework/helper shard
 #Made by JuipoMinutes
 module Crab
-  VERSION = "0.1"
+  VERSION = "0.1.0"
 
   Parser = Ansi_Parser.new("256")
 
