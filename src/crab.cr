@@ -2,6 +2,8 @@ require "./ansi_parser"
 require "./renderable"
 require "./rule"
 require "./panel"
+require "./type_parser"
+require "./table"
 
 #Shrimp: A CLI framework/helper shard
 #Made by JuipoMinutes

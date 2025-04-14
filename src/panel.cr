@@ -108,7 +108,7 @@ class Crab::Panel < Crab::Renderable
   # hpos: A string to set the horizontal position of the text, it can be right, left or center, defaults to center.
   # vpos: A string to set the vertical position of the text, it can be top, bottom or center, defaults to center.
   # style: A string to set the style of the panel, it can be default, double, ascii, defaults to default.
-  def initialize(@width : Int32 = 28, @length : Int32 = 7, @text : String = "",@title : String = "", @crab_codes : String = "", @box_crab_codes : String = "", @hpos : String = "center", @vpos : String = "center",@style : String = "default")
+  def initialize(@width : Int32 = 28, @length : Int32 = 7, @text : String = "",@title : String = "", @crab_codes : String = "", @box_crab_codes : String = "", @hpos : String = "center", @vpos : String = "center", @style : String = "default")
     if @width < 3
       @width = 3
     end
