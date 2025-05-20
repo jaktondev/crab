@@ -7,7 +7,7 @@ class Crab::Ansi_Parser
 
     # Create an ANSI_Parser object
     # It is prefered not to create another ANSI_Parser
-    def initialize(color_mode : String)
+    def initialize(@color_mode : String)
         @color_mode = color_mode
     end
 

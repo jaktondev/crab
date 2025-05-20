@@ -4,11 +4,12 @@ require "./rule"
 require "./panel"
 require "./type_parser"
 require "./table"
+require "./prompt"
 
 #Shrimp: A CLI framework/helper shard
 #Made by JuipoMinutes
 module Crab
-  VERSION = "0.1.0"
+  VERSION = "0.3.0"
 
   Parser = Ansi_Parser.new("256")
 
@@ -26,6 +27,11 @@ module Crab
   # return_to_default makes sure the text returns to the terminal's default color, if false it will retain the last colors used
   def self.puts(text : String|Crab::Renderable, return_to_default : Bool = true)
     STDOUT.puts Parser.parse(text, return_to_default)
+  end
+
+  def self.print(text : String|Crab::Renderable, return_to_default : Bool = true)
+    STDOUT.print Parser.parse(text, return_to_default)
+    STDOUT.flush
   end
 
   # The way to get the terminals columns, it uses stty size

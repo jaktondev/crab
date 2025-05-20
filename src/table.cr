@@ -1,6 +1,7 @@
 require "./renderable"
 require "./type_parser"
 
+
 # A class to create a table with a title
 # It can be used to create a table with data inside
 class Crab::Table < Crab::Renderable
@@ -76,9 +77,9 @@ class Crab::Table < Crab::Renderable
     def row_parser(row : Array(String), codes : String, vertical_char : String, width : Int64) : String 
         row_output = ""
         row.each do |cell|
-            row_output += @box_crab_codes + vertical_char + "#[default]#[default,bg]" + codes + cell
+            row_output += @box_crab_codes + vertical_char + "#[default]#[default,bg]" + codes + cell + "#[default]#[default,bg]"
         end
-        return row_output + @box_crab_codes + vertical_char + "\n"
+        return row_output + @box_crab_codes + vertical_char + "#[default]#[default,bg]" + "\n"
     end
 
     # The render method of the table
@@ -108,10 +109,10 @@ class Crab::Table < Crab::Renderable
 
         output += row_parser(@column_names, @header_crab_codes, vertical_char, width)
         @data.each do |row|
-            output += union_left + (horizontal_char * (width )+ union) * (@columns -1) + horizontal_char * width + union_right + "\n"
+            output += @box_crab_codes + union_left + (horizontal_char * (width )+ union) * (@columns -1) + horizontal_char * width + union_right + "\n"
             output += row_parser(row, @crab_codes, vertical_char, width)
         end
-        output += left_bottom + (horizontal_char * (width ) + union_bottom) * (@columns -1) + horizontal_char * width + right_bottom + "\n"
+        output += @box_crab_codes + left_bottom + (horizontal_char * (width ) + union_bottom) * (@columns -1) + horizontal_char * width + right_bottom + "\n"
         return output
     end
 

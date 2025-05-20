@@ -28,6 +28,8 @@ panely = Crab::Panel.new(width: 35, text: "This is a panel", title: "Test Pan", 
 Crab.puts panely
 
 ruly = Crab::Rule.new(width: width, text: "Rule Tested", crab_codes: "#[red]#[light_grey,bg]", text_pos: "right")
+
+Crab.puts ruly
 ```
 
 Right now there is a way of printing/puts strings with "crab codes" some pieces of strings with similar syntax to Crystal's string interpolation. As seen on the example above
