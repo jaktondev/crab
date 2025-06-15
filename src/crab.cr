@@ -5,9 +5,11 @@ require "./panel"
 require "./type_parser"
 require "./table"
 require "./prompt"
+require "./bar"
+require "./progress"
 
-#Shrimp: A CLI framework/helper shard
-#Made by JuipoMinutes
+#Crab: A CLI framework/helper shard
+#Made by JaktonDev
 module Crab
   VERSION = "0.3.0"
 

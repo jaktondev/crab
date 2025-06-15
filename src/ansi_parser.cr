@@ -119,7 +119,11 @@ class Crab::Ansi_Parser
                 is_bg = false
                 if sentence.includes?("]")
                     color_word = sentence.split("]")[0]
-                    sentence = sentence.split("]")[1]
+                    if sentence.split("]").size > 1
+                        sentence = sentence.split("]")[1..-1].join("]")
+                    else
+                        sentence = sentence.split("]")[1]
+                    end
                     if "0123456789".includes?(color_word.strip()[0])
                         splitted = color_word.split(",")
                         if splitted.size == 3
