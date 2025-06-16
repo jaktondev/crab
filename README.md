@@ -1,6 +1,7 @@
-# crab
+# Crab
+![Crab Logo](./Logo.png "Crab Logo")
 
-CrabCLI (or just Crab) is a Crystal-lang framework/shard to make better Command Line Apps 
+CrabCLI (or just Crab) is a Crystal-lang framework/shard to make more beautifull Command Line Apps 
 
 ## Installation
 
@@ -65,10 +66,17 @@ progress.update # This will update the progress bars
 ```
 
 Right now there is a way of printing/puts strings with "crab codes" some pieces of strings with similar syntax to Crystal's string interpolation. As seen on the example above
+- `#[color]` for colors, `#[color,bg]` for background colors, `#[r,g,b]` for RGB colors, `#[r,g,b,bg]` for RGB background colors.
+- You can change the color mode with Crab.change_color_mode(mode) where mode can be "full", "256", "8" or any other string for black and white mode. Default is "256".
+
+Available colors:
+- `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, 'white', 'orange', 'green', 'purple', 'brown', 'gray', 'light_gray', (both spellings (grey)), 'light_red', 'light_green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan', 'light_orange', 'light_purple', 'light_brown' and 'default' for terminal default color.
+
+
 
 ## Development
 
-The shard is still on progress with lots of others things planned, I'll try to update it as soon as possible.
+I will try to update, fix and add new features to Crab as much as I can, but I'm still a student and I have other projects to work on, so please be patient. :p
 
 ## Contributing
 
