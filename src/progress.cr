@@ -20,7 +20,7 @@ class Crab::Progress
         STDOUT.print "\e[0J"
         STDOUT.flush
         STDOUT.puts Parser.parse(text, return_to_default) + "\n" * (@length + 1)
-        self.update_bars
+        self.update
     end
 
     # A method to add a bar to the progress

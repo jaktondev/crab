@@ -49,7 +49,7 @@ tably = Crab::Table.new(column_names: ["Name", "Age"], title: "Test Table", crab
 tably.padd_row(["Jakton", 999])
 tably.padd_row([name, age])
 
-Crab.puts tabley
+Crab.puts tably
 
 # There is also a way to do progress bars
 progress = Crab::Progress.new

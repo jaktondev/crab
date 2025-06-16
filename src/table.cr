@@ -36,6 +36,9 @@ class Crab::Table < Crab::Renderable
                 @width = name.size
             end
         end
+        if @width < 8
+            @width = 8
+        end
         @column_names = prepare_row(@column_names)
     end
 
