@@ -70,7 +70,7 @@ Right now there is a way of printing/puts strings with "crab codes" some pieces 
 - You can change the color mode with Crab.change_color_mode(mode) where mode can be "full", "256", "8" or any other string for black and white mode. Default is "256".
 
 Available colors:
-- `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, 'white', 'orange', 'green', 'purple', 'brown', 'gray', 'light_gray', (both spellings (grey)), 'light_red', 'light_green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan', 'light_orange', 'light_purple', 'light_brown' and 'default' for terminal default color.
+- 'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'orange', 'green', 'purple', 'brown', 'gray', 'light_gray', (both spellings (grey)), 'light_red', 'light_green', 'light_yellow', 'light_blue', 'light_magenta', 'light_cyan', 'light_orange', 'light_purple', 'light_brown' and 'default' for terminal default color.
 
 
 
