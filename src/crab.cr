@@ -1,3 +1,4 @@
+require "colorize"
 require "./ansi_parser"
 require "./renderable"
 require "./rule"
@@ -7,6 +8,26 @@ require "./table"
 require "./prompt"
 require "./bar"
 require "./progress"
+
+# Bindings for terminal window size (TIOCGWINSZ)
+lib LibC
+  {% if flag?(:linux) %}
+    TIOCGWINSZ = 0x5413u32
+  {% elsif flag?(:darwin) || flag?(:bsd) %}
+    TIOCGWINSZ = 0x40087468u32
+  {% else %}
+    TIOCGWINSZ = 0u32
+  {% end %}
+
+  struct Winsize
+    ws_row : UInt16
+    ws_col : UInt16
+    ws_xpixel : UInt16
+    ws_ypixel : UInt16
+  end
+
+  fun ioctl(fd : Int, request : ULong, argp : Winsize*) : Int
+end
 
 #Crab: A CLI framework/helper shard
 #Made by JaktonDev
@@ -23,8 +44,17 @@ module Crab
   # The default is "256"
   def self.change_color_mode(color_mode : String)
     Parser.color_mode = color_mode
+    case color_mode
+    when "full", "256", "8"
+      Colorize.enabled = true
+    when "none"
+      Colorize.enabled = false
+    else
+      # 1.19 feature: respects TTY, TERM=dumb, and NO_COLOR
+      Colorize.on_tty_only!
+    end
   end
-    
+
   # The default way to output a Crab::Renderable or strings
   # return_to_default makes sure the text returns to the terminal's default color, if false it will retain the last colors used
   def self.puts(text : String|Crab::Renderable, return_to_default : Bool = true)
@@ -36,36 +66,29 @@ module Crab
     STDOUT.flush
   end
 
-  # The way to get the terminals columns, it uses stty size
-  # If it can not be found it will default to 80
-  def self.get_cols() : Int32
-    output_stty = String.build do |str|
-      Process.run("stty size",
-        shell: true,
-        output: str,
-        input: STDIN)
-    end
-    if output_stty.strip == ""
-      80
+  # Internal helper to get terminal size via ioctl
+  private def self.terminal_size
+    win_size = LibC::Winsize.new
+    # Try STDOUT first, then STDIN, then default
+    if LibC.ioctl(STDOUT.fd, LibC::TIOCGWINSZ, pointerof(win_size)) == 0
+      {rows: win_size.ws_row.to_i, cols: win_size.ws_col.to_i}
+    elsif LibC.ioctl(STDIN.fd, LibC::TIOCGWINSZ, pointerof(win_size)) == 0
+      {rows: win_size.ws_row.to_i, cols: win_size.ws_col.to_i}
     else
-      output_stty.split(" ")[1].to_i
+      nil
     end
   end
 
-  # The way to get the terminals rows, it uses the stty size
+  # The way to get the terminals columns
+  # If it can not be found it will default to 80
+  def self.get_cols() : Int32
+    self.terminal_size.try(&.[:cols]) || 80
+  end
+
+  # The way to get the terminals rows
   # If it can not be found it will default to 24
   def self.get_rows() : Int32
-    output_stty = String.build do |str|
-      Process.run("stty size",
-        shell: true,
-        output: str,
-        input: STDIN)
-    end
-    if output_stty.strip == ""
-      24
-    else
-      output_stty.split(" ")[0].to_i
-    end
+    self.terminal_size.try(&.[:rows]) || 24
   end
 
 end

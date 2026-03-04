@@ -1,9 +1,7 @@
 require "./spec_helper"
 
 describe Crab do
-  # TODO: Write tests
-
-  it "works" do
-    false.should eq(true)
+  it "has a version number" do
+    Crab::VERSION.should_not be_nil
   end
 end
