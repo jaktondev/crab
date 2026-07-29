@@ -29,6 +29,37 @@ lib LibC
   fun ioctl(fd : Int, request : ULong, argp : Winsize*) : Int
 end
 
+# Windows extra method
+{% if flag?(:win32) %}
+  # Bindings for Windows Console API
+  lib LibWin32
+    STD_OUTPUT_HANDLE = -11i32
+
+    struct COORD
+      x : Int16
+      y : Int16
+    end
+
+    struct SMALL_RECT
+      left : Int16
+      top : Int16
+      right : Int16
+      bottom : Int16
+    end
+
+    struct CONSOLE_SCREEN_BUFFER_INFO
+      dwSize : COORD
+      dwCursorPosition : COORD
+      wAttributes : UInt16
+      srWindow : SMALL_RECT
+      dwMaximumWindowSize : COORD
+    end
+
+    fun GetStdHandle(nStdHandle : Int32) : Void*
+    fun GetConsoleScreenBufferInfo(hConsoleOutput : Void*, lpConsoleScreenBufferInfo : CONSOLE_SCREEN_BUFFER_INFO*) : Int32
+  end
+{% end %}
+
 #Crab: A CLI framework/helper shard
 #Made by JaktonDev
 module Crab
@@ -66,17 +97,33 @@ module Crab
     STDOUT.flush
   end
 
-  # Internal helper to get terminal size via ioctl
   private def self.terminal_size
-    win_size = LibC::Winsize.new
-    # Try STDOUT first, then STDIN, then default
-    if LibC.ioctl(STDOUT.fd, LibC::TIOCGWINSZ, pointerof(win_size)) == 0
-      {rows: win_size.ws_row.to_i, cols: win_size.ws_col.to_i}
-    elsif LibC.ioctl(STDIN.fd, LibC::TIOCGWINSZ, pointerof(win_size)) == 0
-      {rows: win_size.ws_row.to_i, cols: win_size.ws_col.to_i}
-    else
-      nil
-    end
+    {% if flag?(:win32) %}
+      # --- Windows Implementation ---
+      handle = LibWin32.GetStdHandle(LibWin32::STD_OUTPUT_HANDLE)
+      info = LibWin32::CONSOLE_SCREEN_BUFFER_INFO.new
+
+      # In Windows API, a non-zero return means success
+      if LibWin32.GetConsoleScreenBufferInfo(handle, pointerof(info)) != 0
+        # srWindow contains the actual visible coordinates of the terminal
+        cols = (info.srWindow.right - info.srWindow.left + 1).to_i
+        rows = (info.srWindow.bottom - info.srWindow.top + 1).to_i
+        {rows: rows, cols: cols}
+      else
+        nil
+      end
+
+    {% else %}
+      # --- POSIX Implementation (Linux, macOS, BSD) ---
+      win_size = LibC::Winsize.new
+      if LibC.ioctl(STDOUT.fd, LibC::TIOCGWINSZ, pointerof(win_size)) == 0
+        {rows: win_size.ws_row.to_i, cols: win_size.ws_col.to_i}
+      elsif LibC.ioctl(STDIN.fd, LibC::TIOCGWINSZ, pointerof(win_size)) == 0
+        {rows: win_size.ws_row.to_i, cols: win_size.ws_col.to_i}
+      else
+        nil
+      end
+    {% end %}
   end
 
   # The way to get the terminals columns
