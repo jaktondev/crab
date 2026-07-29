@@ -33,7 +33,11 @@ end
 {% if flag?(:win32) %}
   # Bindings for Windows Console API
   lib LibWin32
-    STD_OUTPUT_HANDLE = -11i32
+    alias DWORD = UInt32
+    alias HANDLE = Void*
+
+    # -11 cast to an unsigned 32-bit integer (DWORD)
+    STD_OUTPUT_HANDLE = 0xFFFFFFF5_u32 
 
     struct COORD
       x : Int16
@@ -55,8 +59,10 @@ end
       dwMaximumWindowSize : COORD
     end
 
-    fun GetStdHandle(nStdHandle : Int32) : Void*
-    fun GetConsoleScreenBufferInfo(hConsoleOutput : Void*, lpConsoleScreenBufferInfo : CONSOLE_SCREEN_BUFFER_INFO*) : Int32
+    # By assigning a lowercase name to the C function, we avoid
+    # clashing with Crystal's built-in global GetStdHandle definition.
+    fun get_std_handle = GetStdHandle(nStdHandle : DWORD) : HANDLE
+    fun get_console_screen_buffer_info = GetConsoleScreenBufferInfo(hConsoleOutput : HANDLE, lpConsoleScreenBufferInfo : CONSOLE_SCREEN_BUFFER_INFO*) : Int32
   end
 {% end %}
 
@@ -97,15 +103,13 @@ module Crab
     STDOUT.flush
   end
 
-  private def self.terminal_size
+private def self.terminal_size
     {% if flag?(:win32) %}
       # --- Windows Implementation ---
-      handle = LibWin32.GetStdHandle(LibWin32::STD_OUTPUT_HANDLE)
+      handle = LibWin32.get_std_handle(LibWin32::STD_OUTPUT_HANDLE)
       info = LibWin32::CONSOLE_SCREEN_BUFFER_INFO.new
-
-      # In Windows API, a non-zero return means success
-      if LibWin32.GetConsoleScreenBufferInfo(handle, pointerof(info)) != 0
-        # srWindow contains the actual visible coordinates of the terminal
+      
+      if LibWin32.get_console_screen_buffer_info(handle, pointerof(info)) != 0
         cols = (info.srWindow.right - info.srWindow.left + 1).to_i
         rows = (info.srWindow.bottom - info.srWindow.top + 1).to_i
         {rows: rows, cols: cols}
