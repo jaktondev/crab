@@ -141,15 +141,14 @@ The styles are:
 
 if otherwise specified, the default style will be used
 
-To add rows to the table you can use the `add_row` method, which takes an array of strings with the values of the row, and it will add the row to the table.
-if you want to add a row with other primitive types, you can use the `padd_row` method, which takes an array of any type and will convert them to strings before adding them to the table. (prepare add)
+To add rows to the table you can use the `padd_row` method, which takes an array of prmitive types (ints, floats, booleans, strings, nills) and adds them to the table (stands for prepare+add)
 
 You can create a table like this:
 
 ```crystal
 require "crab"
 tabletest = Crab::Table.new(column_names: ["Name", "Age", "City"], title: "My Table", crab_codes: "#[red]", box_crab_codes: "#[blue]")
-tabletest.add_row(["John", "25", "New York"])
+tabletest.padd_row(["John", "25", "New York"])
 tabletest.padd_row(["Jane", 30, "Los Angeles"])
 Crab.puts tabletest # => Renders a table with the data in it, with the title "My Table" in red and the box in blue
 ```
@@ -195,6 +194,8 @@ progress.update # => Renders the progress bars with the current values, now both
 progress.puts "Done!" # => Prints "Done!" above the progress bars
 Crab.puts "All done!" # => Prints "All done!" in the terminal
 ```
+
+![Examples here](./examples.png "Examples")
 
 
 ## Development
