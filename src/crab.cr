@@ -37,7 +37,7 @@ end
     alias HANDLE = Void*
 
     # -11 cast to an unsigned 32-bit integer (DWORD)
-    STD_OUTPUT_HANDLE = 0xFFFFFFF5_u32 
+    STD_OUTPUT_HANDLE = 0xFFFFFFF5_u32
 
     struct COORD
       x : Int16
@@ -87,8 +87,7 @@ module Crab
     when "none"
       Colorize.enabled = false
     else
-      # 1.19 feature: respects TTY, TERM=dumb, and NO_COLOR
-      Colorize.on_tty_only!
+      Colorize.enabled = false
     end
   end
 
@@ -108,7 +107,7 @@ private def self.terminal_size
       # --- Windows Implementation ---
       handle = LibWin32.get_std_handle(LibWin32::STD_OUTPUT_HANDLE)
       info = LibWin32::CONSOLE_SCREEN_BUFFER_INFO.new
-      
+
       if LibWin32.get_console_screen_buffer_info(handle, pointerof(info)) != 0
         cols = (info.srWindow.right - info.srWindow.left + 1).to_i
         rows = (info.srWindow.bottom - info.srWindow.top + 1).to_i

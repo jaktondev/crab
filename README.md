@@ -1,7 +1,9 @@
 # Crab
 ![Crab Logo](./Logo.png "Crab Logo")
 
-CrabCLI (or just Crab) is a Crystal-lang framework/shard to make more beautifull Command Line Apps 
+CrabCLI (or just Crab) is a Crystal-lang framework/shard to make more beautifull Command Line Apps
+
+(Now also works on Windows!)
 
 ## Installation
 

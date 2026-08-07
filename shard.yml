@@ -1,9 +1,9 @@
 name: crab
-version: 0.5.0
+version: 1.0.0
 
 authors:
   - jaktondev <jjmayes066@gmail.com>
 
-crystal: '>= 1.15.1'
+crystal: '>= 1.18.0'
 
 license: MIT
